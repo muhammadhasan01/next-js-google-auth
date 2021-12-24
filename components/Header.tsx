@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const Header = () => {
+  const { data: session } = useSession();
+  console.log("Session: ", session);
   return (
     <header>
       <nav>
@@ -11,9 +14,40 @@ const Header = () => {
             <span style={{ color: "#8bc34a" }}>A</span>
           </a>
         </Link>
-
         <p>
-          <button className="signInButton">Sign in</button>
+          {!session && (
+            <a
+              href="/api/auth/signin"
+              onClick={(e) => {
+                e.preventDefault();
+                signIn();
+              }}
+            >
+              <button className="signInButton">Sign in</button>
+            </a>
+          )}
+          {session && (
+            <>
+              <Link href="/profile">
+                <a>
+                  <span
+                    style={{ backgroundImage: `url(${session.user.image})` }}
+                    className="avatar"
+                  />
+                </a>
+              </Link>
+              <span className="email">{session.user.email}</span>
+              <a
+                href="/api/auth/signout"
+                onClick={(e) => {
+                  e.preventDefault();
+                  signOut();
+                }}
+              >
+                <button className="signOutButton">Sign out</button>
+              </a>
+            </>
+          )}
         </p>
       </nav>
 
