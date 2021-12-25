@@ -1,9 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const { data: session } = useSession();
-  console.log("Session: ", session);
   return (
     <header>
       <nav>
@@ -27,16 +27,13 @@ const Header = () => {
             </a>
           )}
           {session && (
-            <>
+            <div className='flex justify-right items-center'>
               <Link href="/profile">
-                <a>
-                  <span
-                    style={{ backgroundImage: `url(${session.user.image})` }}
-                    className="avatar"
-                  />
-                </a>
+                <span>
+                  <img src={session?.user?.image || ""} alt="image profile" />
+                </span>
               </Link>
-              <span className="email">{session.user.email}</span>
+              <span className="email">{session?.user?.email}</span>
               <a
                 href="/api/auth/signout"
                 onClick={(e) => {
@@ -46,7 +43,7 @@ const Header = () => {
               >
                 <button className="signOutButton">Sign out</button>
               </a>
-            </>
+            </div>
           )}
         </p>
       </nav>
@@ -55,6 +52,7 @@ const Header = () => {
         header {
           border-bottom: 1px solid #ccc;
         }
+
         nav {
           display: flex;
           justify-content: space-between;
@@ -63,11 +61,13 @@ const Header = () => {
           margin: 0 auto;
           padding: 0.2rem 1.25rem;
         }
+
         .logo {
           text-decoration: none;
           font-size: 1.5rem;
           font-weight: 600;
         }
+
         .signInButton {
           background-color: #1eb1fc;
           color: #fff;
@@ -77,6 +77,7 @@ const Header = () => {
           font-size: 1rem;
           padding: 0.5rem 1rem;
         }
+
         .signInButton:hover {
           background-color: #1b9fe2;
         }
